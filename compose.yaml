@@ -1,0 +1,7 @@
+services:
+
+  nginx-ang:
+    container_name: nginx-ang
+    image: "ghcr.io/lepavuki/angular-react-devops-case:master"
+    ports:
+      - 8080:8080
