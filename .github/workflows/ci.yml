@@ -3,6 +3,8 @@ name: Nginx image creator
 on:
   push:
     branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
 
 env:
   REGISTRY: ghcr.io
@@ -16,12 +18,6 @@ jobs:
     defaults:
       run:
         working-directory: ./angular
-
-    permissions:
-      contents: read
-      packages: write
-      attestations: write
-      id-token: write
 
     steps:
     - name: Checkout
@@ -42,9 +38,7 @@ jobs:
         CHROME_BIN: ${{ steps.setup-chrome.outputs.chrome-path }}
 
     - name: Build Angular
-      run: |
-        npm link @angular/cli
-        ng build
+      run: npm run build
 
     - name: Login to the Container registry
       uses: docker/login-action@v3.3.0
