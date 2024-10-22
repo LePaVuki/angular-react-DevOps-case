@@ -13,6 +13,10 @@ jobs:
   create-and-push-image:
     runs-on: ubuntu-latest
 
+    defaults:
+      run:
+        working-directory: ./angular
+
     permissions:
       contents: read
       packages: write
@@ -23,16 +27,21 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v3
 
-    - name: Install Node
-      working-directory: ./node
-      run: npm install
+    - name: Setup Chrome
+      id: setup-chrome
+      uses: browser-actions/setup-chrome@v1
+      with:
+        install-dependencies: true
+      
+    - name: Install Angular
+      run: npm ci
 
-    - name: Run SuperTest API Testing
-      working-directory: ./node
-      run: npm test
+    - name: Run Karma Tests
+      run: npm test --no-watch --no-progress --browsers=ChromeHeadless
+      env:
+        CHROME_BIN: ${{ steps.setup-chrome.outputs.chrome-path }}
 
     - name: Build Angular
-      working-directory: ./angular
       run: |
         npm link @angular/cli
         ng build
