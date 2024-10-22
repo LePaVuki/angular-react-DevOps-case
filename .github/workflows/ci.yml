@@ -3,8 +3,6 @@ name: Nginx image creator
 on:
   push:
     branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
 
 env:
   REGISTRY: ghcr.io
