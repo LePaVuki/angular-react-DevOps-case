@@ -2,7 +2,6 @@ services:
 
   nginx-angular:
     container_name: nginx-angular
-    build: .
-    # image: ghcr.io/lepavuki/angular-react-devops-case:Final-pull
+    image: ghcr.io/lepavuki/angular-react-devops-case:Final-pull
     ports:
       - 8080:8080
