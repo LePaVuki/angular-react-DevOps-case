@@ -5,3 +5,5 @@ COPY ./nginx.conf /etc/nginx/nginx.conf
 COPY ./angular/dist/angular-starter /var/www/html
 
 USER nginx
+
+CMD "nginx"
