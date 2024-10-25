@@ -12,7 +12,7 @@ env:
 
 jobs:
 
-  create-and-push-image:
+  build-image:
     runs-on: ubuntu-latest
 
     defaults:
@@ -23,21 +23,17 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v3
 
-    # - name: Setup Chrome
-    #   id: setup-chrome
-    #   uses: browser-actions/setup-chrome@v1
-    #   with:
-    #     install-dependencies: true
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version-file: angular/package.json
       
     - name: Install Angular
       run: npm ci
 
     - name: Run Karma Tests
-      uses: coactions/setup-xvfb@v1.0.1
-      with:
-        run: npm test --no-watch --no-progress --browsers=ChromeHeadlessCI
-      # env:
-      #   CHROME_BIN: ${{ steps.setup-chrome.outputs.chrome-path }}
+      id: run-tests
+      run: npm run test -- --watch=false --browsers=ChromeHeadless
 
     - name: Build Angular
       run: npm run build
