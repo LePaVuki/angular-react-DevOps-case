@@ -72,7 +72,7 @@ jobs:
       run: npm run coverage -- --browsers=ChromeHeadless
 
     - name: Build Angular
-      run: npm run build
+      run: npr run build
 
     - name: Login to the Container registry
       uses: docker/login-action@v3.3.0
