@@ -41,11 +41,9 @@ jobs:
       mail_address: "smtp.gmail.com"
       mail_port: 465
       mail_message: |
-        Workflow on ${{ github.repository }} has finished.
+        Workflow on ${{ github.repository }} is ${{ job.status }}.
         ---
-        Build stage was ${{ job.status }} and lasted ${{ needs.Build-Angular.outputs.duration }}
-        Package stage was ${{ job.status }} and lasted ${{ needs.Package.outputs.duration }}
-
+       
         Total time of the workflow: ${{ Total-Time.steps.duration.outputs.duration }}
 
     secrets:
