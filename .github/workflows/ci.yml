@@ -12,12 +12,42 @@ jobs:
     uses: ./.github/workflows/build-angular.yml
 
   Package:
+    needs: Build-Angular
     uses: ./.github/workflows/package.yml
     with:
       image_name: ${{ github.repository }}
       registry: "ghcr.io"
-      mail_address:
-      mail_port:
+
+  Total-Time:
+    needs: [Build-Angular, Package]
+    if: always()
+ 
+    runs-on: ubuntu-latest
+
+    steps:
+
+    - name: Get total execution time
+      if: always()
+      id: duration
+      uses: RockyIsHere/actions-calculate-log-time@v0.2.4
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+
+  Email-Notify:
+    needs: [Build-Angular, Package, Total-Time]
+    if: always()
+    uses: ./.github/workflows/email-notify.yml
+    with:
+      mail_address: "smtp.gmail.com"
+      mail_port: 465
+      mail_message: |
+        Workflow on ${{ github.repository }} has finished.
+        ---
+        Build stage was ${{ Build-Angular.status }} and lasted ${{ needs.Build-Angular.outputs.duration }}
+        Package stage was ${{ Package.status }} and lasted ${{ needs.Package.outputs.duration }}
+
+        Total time of the workflow: ${{ Total-Time.steps.duration.outputs.duration }}
+
     secrets:
       email_username: ${{secrets.email_username}}
       email_password: ${{secrets.email_password}}

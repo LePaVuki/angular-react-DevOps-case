@@ -2,6 +2,8 @@ name: Build Angular
 
 on:
   workflow_call:
+    outputs:
+      duration: ${{ steps.duration.outputs.duration }}
 
 jobs:
 
@@ -31,3 +33,10 @@ jobs:
 
     - name: Build Angular
       run: npm run build
+
+    - name: Get steps execution time
+      if: always()
+      id: duration
+      uses: RockyIsHere/actions-calculate-log-time@v0.2.4
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
