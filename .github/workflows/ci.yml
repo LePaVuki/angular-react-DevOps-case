@@ -1,4 +1,4 @@
-name: Nginx image creator
+name: CI pipeline
 
 on:
   push:
@@ -6,82 +6,20 @@ on:
   pull_request:
     branches: [ "master" ]
 
-env:
-  REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
-
 jobs:
 
-  build-image:
-    runs-on: ubuntu-latest
+  Build-Angular:
+    uses: ./.github/workflows/build-angular.yml
 
-    defaults:
-      run:
-        working-directory: ./angular
-
-    steps:
-
-    - name: Checkout
-      uses: actions/checkout@v3
-
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version-file: angular/package.json
-      
-    - name: Install Angular
-      run: npm ci
-
-    - name: Run Karma Tests
-      id: run-tests
-      run: npm run coverage -- --browsers=ChromeHeadless
-
-    - name: Build Angular
-      run: npm run build
-
-    - name: Login to the Container registry
-      uses: docker/login-action@v3.3.0
-      with:
-        registry: ${{ env.REGISTRY }}
-        username: ${{ github.actor }}
-        password: ${{ github.token }}
-
-    - name: Extract metadata (tags, labels) for Docker
-      id: meta
-      uses: docker/metadata-action@v5.5.1
-      with:
-        images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-
-    - name: Build and push Docker image
-      uses: docker/build-push-action@v6.9.0
-      with:
-        context: .
-        push: true
-        tags: ${{ steps.meta.outputs.tags }}
-        labels: ${{ steps.meta.outputs.labels }}
-
-
-    - name: Get steps execution time
-      if: always()
-      id: duration
-      uses: RockyIsHere/actions-calculate-log-time@v0.2.4
-      env:
-        GITHUB_TOKEN: ${{ github.token }}
-
-    - name: Deliver email
-      if: always()
-      uses: dawidd6/action-send-mail@v3
-      with:
-        server_address: smtp.gmail.com
-        server_port: 465
-        username: ${{secrets.email_username}}
-        password: ${{secrets.email_password}}
-        subject: GH Action ${{ github.repository }} ${{ github.workflow }} ${{ job.status }}
-        to: ${{ secrets.mail_receiver }}
-        from: ${{ secrets.mail_sender }}
-        body: Build job of ${{github.repository}} completed successfully!
-        html_body: |
-          # Job on ${{ github.repository }}: ${{ job.status }}
-          ---
-          Time of execution: ${{ steps.duration.outputs.duration }}
-        convert_markdown: true
+  Package:
+    uses: ./.github/workflows/package.yml
+    with:
+      image_name: ${{ github.repository }}
+      registry: "ghcr.io"
+      mail_address:
+      mail_port:
+    secrets:
+      email_username: ${{secrets.email_username}}
+      email_password: ${{secrets.email_password}}
+      mail_receiver: ${{ secrets.mail_receiver }}
+      mail_sender: ${{ secrets.mail_sender }}
