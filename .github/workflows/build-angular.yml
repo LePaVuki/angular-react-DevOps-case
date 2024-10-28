@@ -30,7 +30,7 @@ on:
     secrets:
 
       email_username:
-        escription: "Email username"
+        description: "Email username"
         required: true
 
       email_password:
