@@ -118,8 +118,8 @@ jobs:
         subject: GH Action ${{ github.repository }} ${{ github.workflow }} ${{ job.status }}
         to: ${{ secrets.mail_receiver }}
         from: ${{ secrets.mail_sender }}
+        convert_markdown: true
         html_body: |
           Workflow on ${{ github.repository }}: ${{ job.status }}
           ---
           Execution time: ${{ steps.duration.outputs.duration }}
-        convert_markdown: true
