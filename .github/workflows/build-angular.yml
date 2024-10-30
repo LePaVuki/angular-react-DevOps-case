@@ -1,3 +1,39 @@
+# --------------------------------------------------------------
+# GitHub Actions Workflow: build-angular
+# 
+# Description:
+#   This workflow automates the process of building, testing and packaging
+#   of the Angular app project.
+#   It consists of a single job with multiple steps, that insure
+#   succesful building and testing of the Angular app. After succesful
+#   building of the project, docker image is being created and uploaded
+#   to specified registry. After finishing the workflow, an email
+#   notification is being sent to a specified email address.
+#   Email contains total time of the workflow execution and it's status
+#
+# Triggers:
+#   - on: 
+#       - workflow_call: Executes on a call from another workflow
+#
+# Jobs:
+#   - build-Angular: builds, tests and packages an image of
+#     an Angular app, served by Nginx. Sends an email notification
+#     at the end of the workflow
+#
+# Notes:
+#   - Requires the following secrets to be passed from a calling workflow:
+#       email_username: username for email authorisation
+#       email_password: password for email authorisation
+#       mail_receiver: email address of the notification receiver
+#       mail_sender: displayed name of the notification sender
+#
+# Expected Outcome:
+#   - Successful execution of this workflow should result in a
+#     new image being published to the specified registry and email notification
+#     being sent to an address from GitHub secrets.
+#
+# --------------------------------------------------------------
+
 name: build-angular
 
 on:
