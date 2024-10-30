@@ -2,45 +2,35 @@ name: build-angular
 
 on:
   workflow_call:
-
     inputs:
-
       mail_address:
         description: "Mail server address"
         default: "smtp.gmail.com"
         required: true
         type: string
-
       mail_port:
         description: "Mail server port"
         default: 465
         required: true
         type: number
-
       image_name:
         description: "Name of the uploaded image"
         required: true
         type: string
-
       registry:
         description: "Package upload registry"
         required: true
         type: string
-
     secrets:
-
       email_username:
         description: "Email username"
         required: true
-
       email_password:
         description: "Email password"
         required: true
-
       mail_receiver:
         description: "Email of the receiver"
         required: true
-
       mail_sender:
         description: "The notification sender displayed name"
         required: true
@@ -49,7 +39,6 @@ jobs:
 
   build-image:
     runs-on: ubuntu-latest
-
     defaults:
       run:
         working-directory: ./angular
